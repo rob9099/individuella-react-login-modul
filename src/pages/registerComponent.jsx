@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
 
 
 
+
+
+
 let RegisterComponent = () => {
-  
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastNameName] = useState('');
@@ -12,9 +14,17 @@ let RegisterComponent = () => {
   const [password, setPassword] = useState('');
   const [passwordToShortErrorMessage, setPasswordToShortErrorMessage] = useState('');
   const [noSpecialCharactersErrorMessage, setNoSpecialCharactersErrorMessage] = useState('');
+  const [serverErrorResponse, setServerErrorResponse] = useState('');
+  const [registerSucessMessage, setRegisterSucessMessage] = useState('');
+
+
+  /*useEffect(() => {
+    userRef.current.focus()
+  })*/
 
 
   let errorHandler = (e) =>{
+    
     if(e.length < 8){
       setPasswordToShortErrorMessage ('Password to short');
     }else{
@@ -28,29 +38,31 @@ let RegisterComponent = () => {
       setNoSpecialCharactersErrorMessage('')
     };
   };
-
   
   let submitHandler = async (e) =>{
     
     e.preventDefault();
 
-    console.log(passwordToShortErrorMessage)
-    console.log(noSpecialCharactersErrorMessage)
-
-
-    if(passwordToShortErrorMessage && noSpecialCharactersErrorMessage == ''){
-
+    if(passwordToShortErrorMessage == '' && noSpecialCharactersErrorMessage == ''){
+        
       const registered = {
         firstName, lastName, username, password
-      }
+      };
 
-      axios.post('http://localhost:4000/app/signup', registered)
-      .then(response => console.log(response.data))
+      await axios.post('http://localhost:4000/app/signup', registered)
+      .then(response => {
+        if(typeof(response.data) == 'string'){
+          setServerErrorResponse (response.data);
+        }else{
+          setRegisterSucessMessage ('Success you are now registered! Please wait to be redirected')
+        }
+      })
 
-      window.location = '/'
-
+      setTimeout(() => {
+        window.location = '/'
+      }, 1500);
     }else{
-      
+
       setPasswordToShortErrorMessage('Please fix errors before submitting');
     };
   };
@@ -60,55 +72,20 @@ let RegisterComponent = () => {
     <div>
       <form onSubmit={submitHandler}>
         <label htmlFor="registerFirstnameInputField">First name</label>
-        <input type="text" id='registerFirstnameInputField' onChange={(e) => setFirstName(e.target.value)}/><br />
+        <input type="text" id='registerFirstnameInputField' required /*ref={userRef}*/ onChange={(e) => setFirstName(e.target.value)}/><br />
         <label htmlFor="registerLastnameInputField">Last name</label>
-        <input type="text" id='registerLastnameInputField' onChange={(e) => setLastNameName(e.target.value)}/><br />
+        <input type="text" id='registerLastnameInputField' required onChange={(e) => setLastNameName(e.target.value)}/><br />
         <label htmlFor="registerUsernameInputField">Username</label>
-        <input type="text" id='registerUsernameInputField' onChange={(e) => setUsername(e.target.value)}/><br />
+        <input type="text" id='registerUsernameInputField' required onChange={(e) => setUsername(e.target.value)}/><br />
         <label htmlFor="registerPasswordInputField">Password</label>
-        <input type="password" id='registerPasswordInputField' onChange={(e) => {setPassword(e.target.value); errorHandler(e.target.value)}}/><br />
+        <input type="password" id='registerPasswordInputField' required  onChange={(e) => {setPassword(e.target.value); errorHandler(e.target.value)}}/><br />
         <h5>{passwordToShortErrorMessage}</h5>
         <h5>{noSpecialCharactersErrorMessage}</h5>
+        <h5>{serverErrorResponse}{registerSucessMessage}</h5>
         <button>Register</button><br />
       </form>
     </div>
   )
 };
 
-export default RegisterComponent
-
-
-
-
-
-
-
-
-
-
-/*import React, { Component } from 'react'
-
-class registerComponent extends Component {
-  
-  state = {
-    users: [
-      {username: 'test1', password: 'test2'}
-    ]
-  }
-  
-  render() {
-     return (
-      <div>
-      <form>
-        <label htmlFor="registerUsernameInputField">Username</label>
-        <input type="text" id='registerUsernameInputField' onChange={(e) => this.setState.username(e.target.value)}/><br />
-        <label htmlFor="registerPasswordInputField">Password</label>
-        <input type="password" id='registerPasswordInputField' onChange={(e) => this.setState.password(e.target.value)}/><br />
-        <button>Register</button><br />
-      </form>
-    </div>
-    )
-  }
-}
-
-export default registerComponent*/
+export default RegisterComponent;

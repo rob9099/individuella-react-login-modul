@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const signUpTemplate = new mongoose.Schema({
+
+    
     firstName: {
         type: String,
         required: true
@@ -12,14 +14,19 @@ const signUpTemplate = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true
+        //minlength: 5
+        //maxlength: 20
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        //minlength: 5
     },
     date: {
         type: Date,
+        immutable: true,
         default: Date.now
     }
 });
