@@ -2,7 +2,8 @@ import logo from './img/loginlogo2.gif';
 import './App.css';
 import LoginComponent from './pages/loginComponent';
 import RegisterComponent from './pages/registerComponent';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import UserPage from './pages/userPage';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 
@@ -16,6 +17,7 @@ function App(){
           <Routes>
             <Route path='/' element={<LoginComponent />}></Route>
             <Route path='/registerComponent' element={<RegisterComponent />}></Route>
+            <Route path='/userPage' element={<UserPage />}></Route>
           </Routes>
         </header>
       </div>

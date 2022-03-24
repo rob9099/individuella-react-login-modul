@@ -28,6 +28,10 @@ const signUpTemplate = new mongoose.Schema({
         type: Date,
         immutable: true,
         default: Date.now
+    },
+    token: {
+        type: String,
+        immutable: true
     }
 });
 

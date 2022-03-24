@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 
 
@@ -14,8 +14,7 @@ let RegisterComponent = () => {
   const [password, setPassword] = useState('');
   const [passwordToShortErrorMessage, setPasswordToShortErrorMessage] = useState('');
   const [noSpecialCharactersErrorMessage, setNoSpecialCharactersErrorMessage] = useState('');
-  const [serverErrorResponse, setServerErrorResponse] = useState('');
-  const [registerSucessMessage, setRegisterSucessMessage] = useState('');
+  const [registerResponseMessage, setRegisterResponseMessage] = useState('');
 
 
   /*useEffect(() => {
@@ -38,12 +37,14 @@ let RegisterComponent = () => {
       setNoSpecialCharactersErrorMessage('')
     };
   };
+
+
   
   let submitHandler = async (e) =>{
     
     e.preventDefault();
 
-    if(passwordToShortErrorMessage == '' && noSpecialCharactersErrorMessage == ''){
+    if(passwordToShortErrorMessage === '' && noSpecialCharactersErrorMessage === ''){
         
       const registered = {
         firstName, lastName, username, password
@@ -52,20 +53,19 @@ let RegisterComponent = () => {
       await axios.post('http://localhost:4000/app/signup', registered)
       .then(response => {
         if(typeof(response.data) == 'string'){
-          setServerErrorResponse (response.data);
+          setRegisterResponseMessage (response.data);
         }else{
-          setRegisterSucessMessage ('Success you are now registered! Please wait to be redirected')
+          setRegisterResponseMessage ('Success, you are now registered! Please wait to be redirected')
+          setTimeout(() => {
+            window.location = '/'
+          }, 1500);
         }
       })
-
-      setTimeout(() => {
-        window.location = '/'
-      }, 1500);
     }else{
-
       setPasswordToShortErrorMessage('Please fix errors before submitting');
     };
   };
+  
 
   
   return (
@@ -81,7 +81,7 @@ let RegisterComponent = () => {
         <input type="password" id='registerPasswordInputField' required  onChange={(e) => {setPassword(e.target.value); errorHandler(e.target.value)}}/><br />
         <h5>{passwordToShortErrorMessage}</h5>
         <h5>{noSpecialCharactersErrorMessage}</h5>
-        <h5>{serverErrorResponse}{registerSucessMessage}</h5>
+        <h5>{registerResponseMessage}</h5>
         <button>Register</button><br />
       </form>
     </div>
