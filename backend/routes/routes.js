@@ -24,7 +24,6 @@ router.post('/signup', async (request, response) =>{
     const userExists = await signUpTemplateCopy.findOne({username})
     const webtoken = generateJWT(signedUpUser._id)
     signedUpUser.token = webtoken;
-    console.log(signedUpUser)
 
 
     if(userExists){
@@ -39,28 +38,42 @@ router.post('/signup', async (request, response) =>{
 })
 
 
+
+
 const generateJWT = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET)
 }
 
 
+
+
 router.post('/get', async (request, response) =>{
     const {username, password} = request.body;
-
-    //console.log(request.header)
     
-    const matchUser = await signUpTemplateCopy.findOne({username})
-    .then(async user => {
-        const isPasswordVerified = await bcrypt.compare(password, user.password)
+    const matchUser = await signUpTemplateCopy.findOne({username});
+
+    if(matchUser != null){
         
-        if(username == user.username && isPasswordVerified == true){
-            response.json(user)
-        }else{
-            response.json('Wrong username/password')
-        }
-    })
-    .catch(err => response.status(400).json('Error: ' + err))
-})
+            const isPasswordVerified = await bcrypt.compare(password, matchUser.password)
+            console.log(isPasswordVerified)
+            
+            if(username == matchUser.username && isPasswordVerified == true){
+                response.json(matchUser)
+            }else{
+                response.json('Wrong username/password')
+            };
+        
+    }else{
+        (response.json('Wrong username/password'));
+    };
+});
 
 
 module.exports = router;
+
+
+
+
+
+
+//console.log(request.header)
