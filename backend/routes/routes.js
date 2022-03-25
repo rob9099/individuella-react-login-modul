@@ -50,19 +50,19 @@ const generateJWT = (id) => {
 router.post('/get', async (request, response) =>{
     const {username, password} = request.body;
     
+    console.log(request.header.authorization)
+
     const matchUser = await signUpTemplateCopy.findOne({username});
 
-    if(matchUser != null){
+    if(matchUser){
         
             const isPasswordVerified = await bcrypt.compare(password, matchUser.password)
-            console.log(isPasswordVerified)
             
-            if(username == matchUser.username && isPasswordVerified == true){
+            if(isPasswordVerified){
                 response.json(matchUser)
             }else{
                 response.json('Wrong username/password')
             };
-        
     }else{
         (response.json('Wrong username/password'));
     };
@@ -70,10 +70,3 @@ router.post('/get', async (request, response) =>{
 
 
 module.exports = router;
-
-
-
-
-
-
-//console.log(request.header)

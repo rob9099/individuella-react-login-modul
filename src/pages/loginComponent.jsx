@@ -25,6 +25,7 @@ function LoginComponent() {
         setLoginResponseMessage (response.data);
       }else{
         setLoginResponseMessage ('Success you are now logged in! Please wait to be redirected')
+        localStorage.setItem('UserLoggedIn', 'true')
         setTimeout(() => {
           window.location = '/userPage'
         }, 1500);
