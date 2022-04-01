@@ -56,9 +56,10 @@ let RegisterComponent = () => {
           setRegisterResponseMessage (response.data);
         }else{
           setRegisterResponseMessage ('Success, you are now registered! Please wait to be redirected')
-          setTimeout(() => {
+          console.log(response.data)
+          /*setTimeout(() => {
             window.location = '/'
-          }, 1500);
+          }, 1500);*/
         }
       })
     }else{

@@ -22,7 +22,7 @@ router.post('/signup', async (request, response) =>{
 
     const username = signedUpUser.username;
     const userExists = await signUpTemplateCopy.findOne({username})
-    const webtoken = generateJWT(signedUpUser._id)
+    const webtoken = generateJWT(signedUpUser)
     signedUpUser.token = webtoken;
 
 
@@ -32,7 +32,7 @@ router.post('/signup', async (request, response) =>{
         signedUpUser.save()
         .then(data => {
             
-            response.json(data)})
+            response.json({webtoken})})
         .catch(error => response.json(error))
     }
 })
@@ -50,7 +50,7 @@ const generateJWT = (id) => {
 router.post('/get', async (request, response) =>{
     const {username, password} = request.body;
     
-    console.log(request.header.authorization)
+    console.log(request.headers['authorization'])
 
     const matchUser = await signUpTemplateCopy.findOne({username});
 
@@ -61,10 +61,10 @@ router.post('/get', async (request, response) =>{
             if(isPasswordVerified){
                 response.json(matchUser)
             }else{
-                response.json('Wrong username/password')
+                response.json('Wrong password')
             };
     }else{
-        (response.json('Wrong username/password'));
+        (response.json('User not found'));
     };
 });
 
